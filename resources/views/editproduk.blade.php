@@ -61,10 +61,5 @@
                 <button type="submit" class="btn btn-primary">Edit</button>
             </form>
         </div>
-
-        <!-- Footer -->
-        <footer>
-            <p>&copy; 2024 Aplikasi Penjualan. All rights reserved.</p>
-        </footer>
     </body>
 </html>
