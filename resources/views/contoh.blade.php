@@ -13,8 +13,8 @@
 <div class="sidebar">
     <h2>Dashboard Penjualan</h2>
     <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Produk</a></li>
+        <li><a href="{{ url('contoh')}}">Home</a></li>
+        <li><a href="{{ url('produk')}}">Produk</a></li>
         <li><a href="#">Penjualan</a></li>
         <li><a href="#">Laporan</a></li>
         <li><a href="#">Pengaturan</a></li>
@@ -31,11 +31,11 @@
     <div class="cards">
         <div class="card">
             <h3>Total Produk</h3>
-            <p id="total-products">320</p>
+            <p id="total-products">{{ $totalProducts}}</p>
         </div>
         <div class="card">
             <h3>Penjualan Hari Ini</h3>
-            <p id="sales-today">100</p>
+            <p id="sales-today">{{ $salesToday}}</p>
         </div>
         <div class="card">
             <h3>Total Pendapatan</h3>
@@ -57,6 +57,8 @@
         <canvas id="salesChart"></canvas>
     </div>
 </div>
+
+<!-- Sales Chart -->
 
 </body>
 </html>
