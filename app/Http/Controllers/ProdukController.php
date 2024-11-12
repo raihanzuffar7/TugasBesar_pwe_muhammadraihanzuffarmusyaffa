@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use App\Http\Requests\StoreProdukRequest;
 use App\Http\Requests\UpdateProdukRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProdukController extends Controller
 {
@@ -16,7 +18,11 @@ class ProdukController extends Controller
      */
     public function ViewProduk()
     {
-        $produk = Produk::all(); //mengambil semua data di tabel produk
+        //Sproduk = Produk::all(); //mengambil semua data di tabel produk
+        $isAdmin = Auth:: user()->role == 'admin';
+        //jika user adalah admin, maka tampilkan semua data, jika bukan admin, maka tampilkan data dengan user id yang sama dengan user yang Login
+        $produk = $isAdmin? Produk::all(): Produk::where('user_id', Auth:: user()->id)->get();
+
         return view('produk', ['produk' => $produk]); //menampilkan view dari produk.blade.php dengan membawa variabel Sproduk
     }
 
@@ -34,10 +40,11 @@ class ProdukController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'jumlah_produk' => $request->jumlah_produk,
-            'image' => $imageName
+            'image' => $imageName,
+            'user_id' => Auth::user()->id
         ]);
 
-        return redirect('/produk');
+        return redirect(Auth::user()->role.'/produk');
     }
     public function ViewAddProduk()
     {
@@ -48,7 +55,7 @@ class ProdukController extends Controller
     {
         Produk::where('kode_produk', $kode_produk)->delete();
 
-        return redirect('/produk');
+        return redirect(Auth::user()->role.'/produk');
     }
 
     public function ViewEditProduk ($kode_produk)
@@ -72,10 +79,33 @@ class ProdukController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'jumlah_produk' => $request->jumlah_produk,
-            'image' => $imageName
+            'image' => $imageName,
+            'user_id' => Auth::user()->id
         ]);
 
-        return redirect('/produk');
+        return redirect(Auth::user()->role.'/produk');
+    }
+
+    public function ViewLaporan()
+    {
+        $isAdmin = Auth:: user()->role == 'admin';
+        //jika user adalah admin, maka tampilkan semua data, jika bukan admin, maka tampilkan data dengan user id yang sama dengan user yang Login
+        $laporan = $isAdmin? Produk::all(): Produk::where('user_id', Auth:: user()->id)->get();
+        //Mengambil semua data produk
+        $products = Produk::all();
+        return view('laporan', ['products' => $laporan]);
+    }
+
+    public function print()
+    {
+        // Mengambil semua data produk 
+        $products = Produk::all();
+
+        // Load view untuk PDF dengan data produk 
+        $pdf = Pdf::loadView('report', compact('products'));
+
+        // Menampilkan PDF langsung di browser
+        return $pdf->stream('laporan-produk.pdf');
     }
 
 }
